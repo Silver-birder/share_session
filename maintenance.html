@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="/jquery/jquery-3.3.1.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="/materialize/css/materialize.min.css" rel="stylesheet">
+    <script src="/materialize/js/materialize.min.js"></script>
+    <script src="/pages/maintenance/aspect.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>maintenance</title>
+  </head>
+  <body>
+    <div class="valign-wrapper">
+      <h4>MAINTENANCE</h4>
+    </div>
+    <div class="right">
+      <label for="Copy">共有したいサイトでお使い下さい</label>
+      <div>
+          <textarea>javascript:void function(b){var a=document.createElement("script");a.src="https://code.jquery.com/jquery-3.2.1.min.js";a.onload=function(){var a=jQuery.noConflict(!0);b(a)};document.body.appendChild(a)}(function(b,a){var c=document.domain;b.ajax({type:"post",url:"https://ma-share-session.appspot.com/api/1.0/get/cookie",timeout:2E4,cache:!1,data:{Domain:c},dataType:"json"}).done(function(a,b,d){if(0==a.length)alert(c+"\u306e\u30af\u30c3\u30ad\u30fc\u304c\u3042\u308a\u307e\u305b\u3093");else{for(index in a)document.cookie= a[index].key+"="+a[index].value;alert("\u30af\u30c3\u30ad\u30fc\u3092\u8a2d\u5b9a\u3057\u307e\u3057\u305f\u3002")}}).fail(function(a,b,c){alert("\u5931\u6557: \u30b5\u30fc\u30d0\u30fc\u5185\u3067\u30a8\u30e9\u30fc\u304c\u3042\u3063\u305f\u304b\u3001\u30b5\u30fc\u30d0\u30fc\u304b\u3089\u5fdc\u7b54\u304c\u3042\u308a\u307e\u305b\u3093\u3067\u3057\u305f\u3002")})});</textarea>
+      </div>
+    </div>
+    <table class="striped">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Domain</th>
+          <th>Key</th>
+          <th>Value</th>
+          <th>Path</th>
+          <th>Expire</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .}}      
+          <tr>
+            <td><a class="waves-effect waves-light btn modal-trigger" href="#modal"><i class="material-icons">edit</i></a></td>
+            <td data="Domain">{{.Domain}}</td>
+            <td data="Key">{{.Key}}</td>
+            <td data="Value">{{.Value}}</td>
+            <td data="Path">{{.Path}}</td>
+            <td data="Expire">{{.Expire}}</td>
+          </tr>
+        {{end}}
+      </tbody>
+    </table>
+    <a class="btn-floating btn-large waves-effect waves-light red right modal-trigger" href="#modal"><i class="material-icons">add</i></a>
+  </body>
+  <div id="modal" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4 id="title"></h4>
+      <form>
+        <table>
+          <tbody>
+            <tr>
+              <th>Domain</th>
+              <td>
+                <input placeholder="Domain" name="Domain" type="text" class="validate">
+              </td>
+            </tr>
+            <tr>
+              <th>Key</th>
+              <td>
+                <input placeholder="Key" name="Key" type="text" class="validate">
+              </td>
+            </tr>
+            <tr>
+              <th>Value</th>
+              <td>
+                <input placeholder="Value" name="Value" type="text" class="validate">
+              </td>
+            </tr>
+            <tr>
+              <th>Path</th>
+              <td>
+                <input placeholder="Path" name="Path" type="text" class="validate">
+              </td>
+            </tr>
+            <tr>
+              <th>Expire</th>
+              <td>
+                <input placeholder="Expire" name="Expire" type="date" class="validate">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="modal-close waves-effect waves-green btn-flat" id="Done">DONE</a>
+      <a href="#" class="modal-close waves-effect waves-green btn-flat" id="Cancel">CANCEL</a>
+      <a href="#" class="modal-close waves-effect waves-green btn-flat" id="Delete" style="display:none;">DELETE</a>
+    </div>
+  </div>
+</html>

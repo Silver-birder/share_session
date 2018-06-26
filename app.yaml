@@ -1,0 +1,22 @@
+runtime: go
+api_version: go1.8
+
+handlers:
+  - url: /materialize/css
+    static_dir: public/vendor/materialize/css
+    mime_type: text/css
+
+  - url: /materialize/js
+    static_dir: public/vendor/materialize/js
+    mime_type: application/javascript
+
+  - url: /jquery
+    static_dir: public/vendor/jquery
+    mime_type: application/javascript
+
+  - url: /pages/maintenance
+    static_dir: public/pages/maintenance
+    mime_type: application/javascript
+
+  - url: /.*
+    script: _go_app
