@@ -10,9 +10,9 @@ void((function(f){
     document.body.appendChild(script);
 })(
 function(b, undefined){
-    var domain = document.domain;
+    var host = document.domain;
     var data = {
-        'Domain':domain
+        'Host':host
     }
     b.ajax({
         type: "post",
@@ -24,7 +24,7 @@ function(b, undefined){
     })
     .done(function (response, textStatus, jqXHR) {
         if (response.length == 0) {
-            alert(domain+"のクッキーがありません")
+            alert(host+"のクッキーがありません")
             return ;
         }
         for (index in response) {

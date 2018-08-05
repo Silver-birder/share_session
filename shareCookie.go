@@ -10,7 +10,9 @@ import (
         "google.golang.org/appengine"
         "google.golang.org/appengine/datastore"
 )
+
 type ShareCookie struct {
+        Host string `json:"host"`
         Key string `json:"key"`
         Value string `json:"value"`
         Domain  string `json:"domain"`
@@ -30,7 +32,7 @@ func getCookie(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Access-Control-Allow-Origin", "*")
         w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
         c := appengine.NewContext(r)
-        q := datastore.NewQuery("ShareCookie").Filter("Domain=", r.FormValue("Domain"))
+        q := datastore.NewQuery("ShareCookie").Filter("Host=", r.FormValue("Host"))
         shareCookies := make([]ShareCookie, 0)
         if _, err := q.GetAll(c, &shareCookies); err != nil {
                 http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -48,11 +50,12 @@ func getCookie(w http.ResponseWriter, r *http.Request) {
 func setCookie(w http.ResponseWriter, r *http.Request) {
         c := appengine.NewContext(r)
         var s ShareCookie
-        q := datastore.NewQuery("ShareCookie").Filter("Domain=", r.FormValue("Domain")).Filter("Key=", r.FormValue("Key"))
+        q := datastore.NewQuery("ShareCookie").Filter("Host=", r.FormValue("Host")).Filter("Domain=", r.FormValue("Domain")).Filter("Key=", r.FormValue("Key"))
         iter := q.Run(c)
         key, err := iter.Next(&s)
         if key == nil {
                 key = datastore.NewIncompleteKey(c, "ShareCookie", shareCookieKey(c))
+                s.Host = r.FormValue("Host")
                 s.Domain = r.FormValue("Domain")
                 s.Key = r.FormValue("Key")
                 s.Path = r.FormValue("Path")
@@ -70,11 +73,12 @@ func setCookie(w http.ResponseWriter, r *http.Request) {
 func deleteCookie(w http.ResponseWriter, r *http.Request) {
         c := appengine.NewContext(r)
         var s ShareCookie
-        q := datastore.NewQuery("ShareCookie").Filter("Domain=", r.FormValue("Domain")).Filter("Key=", r.FormValue("Key"))
+        q := datastore.NewQuery("ShareCookie").Filter("Host=", r.FormValue("Host")).Filter("Domain=", r.FormValue("Domain")).Filter("Key=", r.FormValue("Key"))
         iter := q.Run(c)
         key, _ := iter.Next(&s)
         _ = datastore.Delete(c, key)
 }
+
 func maintenance(w http.ResponseWriter, r *http.Request) {
         c := appengine.NewContext(r)
         q := datastore.NewQuery("ShareCookie").Ancestor(shareCookieKey(c))
@@ -87,6 +91,7 @@ func maintenance(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
+
 func shareCookieKey(c context.Context) *datastore.Key {
         return datastore.NewKey(c, "ShareCookie", "default_shareCookie", 0, nil)
 }
